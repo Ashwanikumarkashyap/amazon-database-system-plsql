@@ -94,40 +94,27 @@ For M: N binary relationship, make a new entity with foreign key as the primary 
 ## SIGNIFICANT PROCEDURES
 
 **1. Register buyer:** invoked by buyer responsible for
-
-    - registering user given email, fname, lname and password.
-
-    - registering the buyer itself setting its prime membership as false by default and 
+- registering user given email, fname, lname and password.
+- registering the buyer itself setting its prime membership as false by default and 
     prime member expiry date as Null.
 
 **2. Register seller** has 2 responsibilities
-    - registering user given email, fname, lname and password.
-
-    - registering the seller itself given company name, url, description, setting its average rating  as 2.5 default.
+- registering user given email, fname, lname and password.
+- registering the seller itself given company name, url, description, setting its average rating  as 2.5 default.
 
 **3. Place order:** Given a buyer id, place order is responsible for the following –
+- To iterate over the shopping cart of a particular buyer and remove each item from buyers cart.
+- While removing each product, sum up the price of each product to the total price for the order.
+- If the user is a prime user, do not include shipping charges for that order.
+- Fetch the default address set by the buyer from the list of addresses for that buyer from the contact\_details tables.
+- Fetch the default card details set by the buyer from the list of card details for that buyer from the card\_info table.
+- To make sure not to include certain products from the shopping car in the order table who's available unity is zero (in\_stock bit is set to 0).
+- To add an entry in the order table, containing details of the invoice (total price, total quantity of products in order, tax, shipping charge, card\_details used for the order, delivery contact details used for the order)
+- To invokes a trigger responsible for updating the available\_units of each product being bought in that order.
 
-    - To iterate over the shopping cart of a particular buyer and remove each item from buyers cart.
-
-    - While removing each product, sum up the price of each product to the total price for the order.
-
-    - If the user is **&quot;prime user&quot;** do not include shipping charges for that order.
-
-    - Fetch the default address set by the buyer from the list of addresses for that buyer from the contact\_details tables.
-
-    - Fetch the default card details set by the buyer from the list of card details for that buyer from the card\_info table.
-
-    - To make sure not to include certain products from the shopping car in the order table who's available unity is zero (in\_stock bit is set to 0).
-
-    - To add an entry in the order table, containing details of the invoice (total price, total quantity of products in order, tax, shipping charge, card\_details used for the order, delivery contact details used for the order)
-
-    - To invokes a trigger responsible for updating the available\_units of each product being bought in that order.
-
-**4. Give review:** A buyer can add a review by providing product\_id, buyer\_id, review, rating, and image\_url (if any). It adds a review in the review table and image of it in the image table. After execution It invokes two triggers.
-    
-    - update\_product\_rating
-    
-    - updte\_seller\_rating.
+**4. Give review:** A buyer can add a review by providing product\_id, buyer\_id, review, rating, and image\_url (if any). It adds a review in the review table and image of it in the image table. After execution It invokes two triggers.    
+- update\_product\_rating
+- updte\_seller\_rating.
 
 **5. Add\_contact\_details:** adds details about address and the users number. A user can add multiple contact details and can set a single to contact\_details to be used by default.
 
@@ -151,22 +138,16 @@ For M: N binary relationship, make a new entity with foreign key as the primary 
 ## IMPORTANT TRIGGERS
 
 **1. Update available units:**
-     - Trigger is invoked whenever a user places an order. Update available unitsis responsible for updating the value of available units for each product in the product table that is being ordered by a buyer.
-    
-    - The procedures iterate over all the entries of order\_product table for a specific order and iteratively updates each products quantity in the product table.
-    
-    - If the quantity reaches 0, the product is marked as out of stock, setting its in\_stock value as 0.
+- Trigger is invoked whenever a user places an order. Update available unitsis responsible for updating the value of available units for each product in the product table that is being ordered by a buyer.
+- The procedures iterate over all the entries of order\_product table for a specific order and iteratively updates each products quantity in the product table.
+- If the quantity reaches 0, the product is marked as out of stock, setting its in\_stock value as 0.
 
 **2. Update\_product\_rating:**
-    
-    - It is responsible for updating the rating of a product every time a buyer gives a review by averaging the earlier rating with this buyers rating.
-    
-    - It also updates the count of rating given for that particular product.
+- It is responsible for updating the rating of a product every time a buyer gives a review by averaging the earlier rating with this buyers rating.
+- It also updates the count of rating given for that particular product.
 
 **3. Update\_seller\_rating**
-    
-    - It is responsible for updating the rating of a seller every time a buyer gives a review to a product by averaging the earlier rating with this buyers rating.
+- It is responsible for updating the rating of a seller every time a buyer gives a review to a product by averaging the earlier rating with this buyers rating.
 
 **4. Remove\_products\_from\_cart**
-    
-    - After placing an order by a buyer, the trigger is responsible for removing all the ordered products from the shopping cart of that particular buyer.
+- After placing an order by a buyer, the trigger is responsible for removing all the ordered products from the shopping cart of that particular buyer.
