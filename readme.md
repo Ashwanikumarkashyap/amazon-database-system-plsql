@@ -1,4 +1,4 @@
-# E-Commerse Database System with EER Model
+# E-Commerse Database System - PLSQL and EER Model
 
 The project implements the **Amazon's e-commerce database system** which fulfils all the functional requirements for an e-commerce website. The database is created by designing the **Extended Entity Relation (EER)** model of Amazon as an E-commerce website. EER is then converted to **relational tables** using the set of well defined rules and after applying the **normalisation techniques**. Project utilizes **PLSQL** and it's **stored procedures, triggeres and cursors** to create tables and maintain the consistency within the relational database. The database system fulfils the following functional requirements -
 
